@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reporte Semanal Meta Ads — Andez Oficial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#f7f8fa;
+    --card:#ffffff;
+    --border:#e6e8ec;
+    --shadow:0 2px 10px rgba(20,20,43,0.05);
+    --indigo:#4f46e5;
+    --indigo-soft:#eef0fd;
+    --green:#17845a;
+    --green-soft:#e7f5ee;
+    --red:#c0392b;
+    --red-soft:#fbebe9;
+    --text:#1c1d26;
+    --text-soft:#6b6f80;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    padding:28px 32px 60px;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:28px;
+  }
+  header h1{
+    font-size:22px;
+    font-weight:700;
+    margin:0 0 4px;
+  }
+  header .sub{
+    color:var(--text-soft);
+    font-size:13px;
+  }
+  .badge{
+    background:var(--indigo-soft);
+    color:var(--indigo);
+    font-size:12px;
+    font-weight:600;
+    padding:6px 12px;
+    border-radius:20px;
+  }
+  section{margin-bottom:38px;}
+  h2{
+    font-size:15px;
+    font-weight:600;
+    margin:0 0 14px;
+    color:var(--text);
+  }
+  h2 .count{
+    color:var(--text-soft);
+    font-weight:400;
+    font-size:13px;
+  }
+  .grid-scorecards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;
+  }
+  .scorecard{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:16px 18px;
+  }
+  .scorecard .label{
+    font-size:12px;
+    color:var(--text-soft);
+    margin-bottom:6px;
+  }
+  .scorecard .value{
+    font-size:20px;
+    font-weight:700;
+    color:var(--indigo);
+  }
+  .scorecard .value.plain{color:var(--text);}
+
+  .campaign-grid{
+    display:grid;
+    gap:16px;
+  }
+  .campaign-grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  .campaign-grid.cols-2{grid-template-columns:repeat(2,1fr);}
+  .campaign-grid.cols-1{grid-template-columns:1fr;}
+  @media (max-width:1000px){.campaign-grid{grid-template-columns:1fr !important;}}
+
+  .campaign-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:18px 20px;
+  }
+  .campaign-card .title-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:4px;
+  }
+  .campaign-card .name{
+    font-size:16px;
+    font-weight:600;
+  }
+  .campaign-card .tech-name{
+    font-size:11px;
+    color:var(--text-soft);
+    margin-bottom:14px;
+  }
+  .status-pill{
+    font-size:11px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .status-active{background:var(--green-soft);color:var(--green);}
+  .status-paused{background:var(--red-soft);color:var(--red);}
+  .campaign-metrics{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 16px;
+  }
+  .campaign-metrics .m{
+    border-top:1px solid var(--border);
+    padding-top:8px;
+  }
+  .campaign-metrics .m .l{font-size:11px;color:var(--text-soft);}
+  .campaign-metrics .m .v{font-size:14px;font-weight:600;}
+  .campaign-metrics .m .v.hero{color:var(--indigo);}
+
+  table.ads-table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  table.ads-table th{
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--text-soft);
+    padding:12px 14px;
+    background:#fbfbfd;
+    border-bottom:1px solid var(--border);
+  }
+  table.ads-table td{
+    padding:11px 14px;
+    font-size:13px;
+    border-bottom:1px solid var(--border);
+    vertical-align:middle;
+  }
+  table.ads-table tr:last-child td{border-bottom:none;}
+  table.ads-table a.preview-link{
+    color:var(--indigo);
+    text-decoration:none;
+    font-weight:500;
+    font-size:12px;
+  }
+  table.ads-table a.preview-link:hover{text-decoration:underline;}
+  .flag{color:var(--red);font-size:11px;margin-left:4px;}
+  .filter-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  select#campaignFilter{
+    font-family:'Poppins',sans-serif;
+    font-size:13px;
+    padding:8px 12px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text);
+  }
+
+  .funnel-wrap{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:24px;
+    display:flex;
+    justify-content:center;
+  }
+  .funnel-step-label{
+    font-size:12px;
+    fill:var(--text-soft);
+    font-family:'Poppins',sans-serif;
+  }
+  .funnel-value{
+    font-size:15px;
+    font-weight:700;
+    fill:#ffffff;
+    font-family:'Poppins',sans-serif;
+  }
+  .funnel-pct{
+    font-size:11px;
+    fill:var(--indigo);
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;
+  }
+
+  .chart-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px;
+  }
+  .chart-controls{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .metric-btn{
+    font-family:'Poppins',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    padding:7px 14px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text-soft);
+    cursor:pointer;
+  }
+  .metric-btn.active{
+    background:var(--indigo);
+    border-color:var(--indigo);
+    color:#fff;
+  }
+  .chart-container{height:320px;}
+
+  footer{
+    text-align:center;
+    color:var(--text-soft);
+    font-size:11px;
+    margin-top:40px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Andez Oficial — Reporte Semanal Meta Ads</h1>
+    <div class="sub">Cuenta act_1557302461462659 · Semana del 27 de julio al 2 de agosto de 2026</div>
+  </div>
+  <div class="badge">Generado el 3 de agosto de 2026</div>
+</header>
+
+<section>
+  <h2>Métricas generales</h2>
+  <div class="grid-scorecards">
+    <div class="scorecard"><div class="label">Inversión</div><div class="value">$1.208.269 <span style="font-size:12px;font-weight:500;">ARS</span></div></div>
+    <div class="scorecard"><div class="label">Compras</div><div class="value">39</div></div>
+    <div class="scorecard"><div class="label">Costo por compra</div><div class="value">$30.981</div></div>
+    <div class="scorecard"><div class="label">ROAS</div><div class="value">4,49x</div></div>
+    <div class="scorecard"><div class="label">Valor de compra</div><div class="value">$5.427.224</div></div>
+    <div class="scorecard"><div class="label">Campañas con actividad</div><div class="value plain">3</div></div>
+    <div class="scorecard"><div class="label">Anuncios activos</div><div class="value plain">33</div></div>
+    <div class="scorecard"><div class="label">Impresiones</div><div class="value plain">280.913</div></div>
+    <div class="scorecard"><div class="label">Clics en el enlace</div><div class="value plain">5.715</div></div>
+    <div class="scorecard"><div class="label">Visitas a landing</div><div class="value plain">4.900</div></div>
+    <div class="scorecard"><div class="label">ViewContent</div><div class="value plain">6.644</div></div>
+    <div class="scorecard"><div class="label">Carritos</div><div class="value plain">544</div></div>
+    <div class="scorecard"><div class="label">Pagos iniciados</div><div class="value plain">88</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Métricas por campaña <span class="count">(3 campañas con inversión esta semana)</span></h2>
+  <div class="campaign-grid cols-3">
+
+    <div class="campaign-card">
+      <div class="title-row">
+        <div>
+          <div class="name">Promo 3x2</div>
+          <div class="tech-name mono">catalogo_promo_3x2</div>
+        </div>
+        <div class="status-pill status-active">Activa</div>
+      </div>
+      <div class="campaign-metrics">
+        <div class="m"><div class="l">Inversión</div><div class="v">$846.661</div></div>
+        <div class="m"><div class="l">Compras</div><div class="v hero">33</div></div>
+        <div class="m"><div class="l">Costo/compra</div><div class="v">$25.656</div></div>
+        <div class="m"><div class="l">ROAS</div><div class="v hero">5,60x</div></div>
+        <div class="m"><div class="l">Valor de compra</div><div class="v">$4.741.735</div></div>
+        <div class="m"><div class="l">Impresiones</div><div class="v">192.572</div></div>
+        <div class="m"><div class="l">Clics enlace</div><div class="v">3.727</div></div>
+        <div class="m"><div class="l">Landing views</div><div class="v">3.071</div></div>
+        <div class="m"><div class="l">ViewContent</div><div class="v">4.752</div></div>
+        <div class="m"><div class="l">Carritos</div><div class="v">418</div></div>
+        <div class="m"><div class="l">Pagos iniciados</div><div class="v">66</div></div>
+      </div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="title-row">
+        <div>
+          <div class="name">Ramos CABA</div>
+          <div class="tech-name mono">catalogo_caba_ramos</div>
+        </div>
+        <div class="status-pill status-active">Activa</div>
+      </div>
+      <div class="campaign-metrics">
+        <div class="m"><div class="l">Inversión</div><div class="v">$133.640</div></div>
+        <div class="m"><div class="l">Compras</div><div class="v hero">2</div></div>
+        <div class="m"><div class="l">Costo/compra</div><div class="v">$66.820</div></div>
+        <div class="m"><div class="l">ROAS</div><div class="v hero">1,65x</div></div>
+        <div class="m"><div class="l">Valor de compra</div><div class="v">$220.894</div></div>
+        <div class="m"><div class="l">Impresiones</div><div class="v">44.030</div></div>
+        <div class="m"><div class="l">Clics enlace</div><div class="v">1.224</div></div>
+        <div class="m"><div class="l">Landing views</div><div class="v">1.175</div></div>
+        <div class="m"><div class="l">ViewContent</div><div class="v">905</div></div>
+        <div class="m"><div class="l">Carritos</div><div class="v">57</div></div>
+        <div class="m"><div class="l">Pagos iniciados</div><div class="v">6</div></div>
+      </div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="title-row">
+        <div>
+          <div class="name">Reels Catálogo</div>
+          <div class="tech-name mono">catalogo_Jun/l26_Reels</div>
+        </div>
+        <div class="status-pill status-paused">Pausada</div>
+      </div>
+      <div class="campaign-metrics">
+        <div class="m"><div class="l">Inversión</div><div class="v">$227.969</div></div>
+        <div class="m"><div class="l">Compras</div><div class="v hero">4</div></div>
+        <div class="m"><div class="l">Costo/compra</div><div class="v">$56.992</div></div>
+        <div class="m"><div class="l">ROAS</div><div class="v hero">2,04x</div></div>
+        <div class="m"><div class="l">Valor de compra</div><div class="v">$464.595</div></div>
+        <div class="m"><div class="l">Impresiones</div><div class="v">44.311</div></div>
+        <div class="m"><div class="l">Clics enlace</div><div class="v">764</div></div>
+        <div class="m"><div class="l">Landing views</div><div class="v">654</div></div>
+        <div class="m"><div class="l">ViewContent</div><div class="v">987</div></div>
+        <div class="m"><div class="l">Carritos</div><div class="v">69</div></div>
+        <div class="m"><div class="l">Pagos iniciados</div><div class="v">15</div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Dashboard de anuncios <span class="count">(agrupado por nombre de anuncio, no por Ad ID)</span></h2>
+  <div class="filter-row">
+    <label for="campaignFilter" style="font-size:13px;color:var(--text-soft);">Filtrar por campaña:</label>
+    <select id="campaignFilter">
+      <option value="all">Todas las campañas</option>
+      <option value="Promo 3x2">Promo 3x2</option>
+      <option value="Ramos CABA">Ramos CABA</option>
+      <option value="Reels Catálogo">Reels Catálogo</option>
+    </select>
+  </div>
+  <table class="ads-table" id="adsTable">
+    <thead>
+      <tr>
+        <th>Anuncio</th>
+        <th>Campaña</th>
+        <th>Preview</th>
+        <th>Compras</th>
+        <th>Costo/Compra</th>
+        <th>ROAS</th>
+        <th>Impresiones</th>
+        <th>CTR de enlace</th>
+      </tr>
+    </thead>
+    <tbody id="adsTableBody"></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Embudo de conversión <span class="count">(cuenta completa, 27 jul – 2 ago)</span></h2>
+  <div class="funnel-wrap">
+    <svg id="funnelSvg" viewBox="0 0 900 420" width="100%" style="max-width:820px;"></svg>
+  </div>
+</section>
+
+<section>
+  <h2>Evolución diaria por campaña</h2>
+  <div class="chart-card">
+    <div class="chart-controls">
+      <button class="metric-btn active" data-metric="spend">Inversión</button>
+      <button class="metric-btn" data-metric="purchases">Compras</button>
+      <button class="metric-btn" data-metric="roas">ROAS</button>
+    </div>
+    <div class="chart-container"><canvas id="trendChart"></canvas></div>
+  </div>
+</section>
+
+<footer>Reporte generado automáticamente a partir de Meta Ads Manager — Andez Oficial</footer>
+
+<script>
+/* ---------- Ads dashboard data (grouped by ad name) ---------- */
+const ads = [
+  {name:"A1_promo_express", campaign:"Promo 3x2", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQLzhabEzwETnHXY7dcw589IfKicVCsAqughYLiObHKcpjMcUXu75DMrPrFUTn4q5uGe1BieognMDHCrYaNNcsR_BBZ9Feq0Dpzez409ybsraiUixXFiph9NqNH9DP5N9iaTRtP05Ku4yQClUQFsUkXOu5HJ54DF_KWrNuVtury57aTewUY3kWlFwEYNVB5g7lhFHJYF1x0vDKWZUhbFiZQZCTwDe71WVzUM2b1TVM0GCA&t=AQI9aqZjNL8BJCygJZ0", ok:true, spend:544319.47, purchases:21, roas:5.15, impressions:128617, ctr:1.91},
+  {name:"A2_promo_express", campaign:"Promo 3x2", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQK5Yavws1mGCO_dOHIKojb3BdLkcwOnkFf4FSIXQHgTjvlqA8QYcNciZKh1A4WpVA4UHHZqIyn66DgfhuxdAc6n_aZPmuu6aW0iWH0C9H__t7vPTvfNEyQrb0tERzRG6Fv6gmW353JwtJKnT24IY9A2e1qWLtPqkZ6Bg9ukm2i507uf2p0UoSlgzghaKbXyc44lERppIr6l25G68D3r0aIJwWJWpZ28JpP25kPVUVKRTw&t=AQIGu-qcxw_56IFo8YU", ok:true, spend:90741.86, purchases:5, roas:8.84, impressions:17968, ctr:2.28},
+  {name:"A4_promo_express", campaign:"Promo 3x2", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQLTV0IVEXCKxWXtaI-2R1kzRBgko5DrgGN2iDi87Cj5UdBhaow2BFhW2gZI1TB-4tU-44Q0KioXpeeAOKM0STGjNU1daWiTxrYCSnPcQjwGP2xDCnGWmVTx7ssOQ6bRt9Gqm6FK1kDq76YevA82xXgGorj1kX4X40R1VSWyW8Jv52tCXNrYUVsx5Uqloh22IH4beHIaER4OuyVWCOYPqwZC8bCllapLwWnqJwpuqtceqg&t=AQKLJUkDgwaypDj5B3s", ok:true, spend:202860.06, purchases:6, roas:5.59, impressions:43974, ctr:1.91},
+  {name:"A3_promo3x2_carrusel", campaign:"Promo 3x2", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQJqmctwxe9BPjcPtsiguHkmvvT6ngMygKVP0yOyPhBtiCLpucIDzduKjSixglILX2_ALU9IrydJa428t3i2yGMzF3E3nocdyJFpx7WgLtWUIG8NVETF-edD-lGc7kAh7idN5hIJxRRGGY2s9698yhaBl_eKATTVdxXobePOLbBl4eb8fHwgug2n9-6CJC36ur6LTyaHR8uGRmsTWPpA5LrERiltfLOqqUq6IGNGTLKoDQ&t=AQKHW4bJM9q8-mA40x4", ok:true, spend:8739.19, purchases:0, roas:null, impressions:2013, ctr:1.04},
+  {name:"A3_promo3x2_Dinamico_v1 / v2", campaign:"Promo 3x2", preview:null, ok:false, spend:0, purchases:0, roas:null, impressions:0, ctr:null},
+
+  {name:"A3_CABA_Ramos", campaign:"Ramos CABA", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQJtQzl8WGNJiNy45aGyin4MyigM4_zYgBJkWmxz80dnj4W8WMeWeIBX0EzTjKDjQuut869ezYmE1kSx-DxLPNrK9sy-jOH59SaCTTievnbxz7H8wAX_GSjC_oY_thaCk-C0ZFu69M-laCOFQDs4S_QoC7Gx5miVtolM4mxMG3k7P5lHvw1-IZ2HAicTEWzHnQS5Gxr0Pe1M40Yi8Q-53C1hUMO0eYNtOTis8U9tDja59Q&t=AQJq_BJ6jsJXsSPMpos", ok:true, spend:70559.80, purchases:1, roas:2.14, impressions:24356, ctr:2.75},
+  {name:"A2_CABA_Ramos", campaign:"Ramos CABA", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQKMqw7Pe-a02XIfF8-2_KwHXCzKaCE0lFZpJ0O7uK9BjXNTJz1R5ytBb8UlilI4pWcvG_HYN-bTSCwoF15nOxn-66U7MKBGmohGhp1rEoNHbm4MW6HuW7tPSSoxElooHAtPNwD2HIN8xchRc_heWDTRp0pWTFJ2eyYrdaxoC0B2dNa9dMFMV8VoVYbZ0ov0iCgXpJudIb7G2FLyxhB2amiQvROzc0YY5pdy8QohkjncSQ&t=AQI1i6O_qRk05luYvNs", ok:true, spend:59311.56, purchases:0, roas:null, impressions:18654, ctr:2.82},
+  {name:"A1_CABA_Ramos", campaign:"Ramos CABA", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQLxaz_iNU-dTWrXb-uv7yFKDwMXaeUVlyscV1Cf7H9yI2tAiDHcJoPMa50T-lqHbZ361DeiAalU8JvkoxJ7x6QADvS-xX2zNcqsZ9Fi-5t07BS6FzoBoK8phMmfq0zeXg4VxzyHErAvB6qjHL3fLEiZ09b-zsDT7McJq68VfIZiClcrDTLA7b2Pd25y2_EmFzXMZ6Y1kRYWZykZP4_sQIlPZ_TTdMqoKy-Be-yrLWgH7w&t=AQK1DNqhEnUfLJ1uIoc", ok:true, spend:3331.26, purchases:1, roas:21.00, impressions:916, ctr:2.62},
+  {name:"A4_CABA_Ramos_Reel", campaign:"Ramos CABA", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQJDBMlAay1YPYDKUK-v6gfi4Jr7XeTeNebs1GounKXYGMGTOKFD-0rYniqGYOXDtpiTvXzP6cB0jtIDYi1m5_3H_lHzlPSwCepKdvv8_unlYoIf0BcaSx8A3VfZ1qnE7Iuy-6emb2RtOIsEPzq17TsnTWqcT7ZfIGUvOXGuX660oOU7nS8UOMEQrAQ0fyMOqJblV-ud1QuggDUbeVCmZzmnEG2w4Ht1SBNQ_oLpEumj2w&t=AQJW7zSWTpShZEFP9fs", ok:true, spend:437.47, purchases:0, roas:null, impressions:104, ctr:1.92},
+
+  {name:"A5_Reel", campaign:"Reels Catálogo", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQI7iBSOONiYhpG91M4UGo4H4MLAtItRXSxcvZMqR-9lN6Y8URpLDVPpgdUxnPpDxC-qhLjy2d-iyWV0Yew6yIbC_i2rrbC9tFFfXxyEZ3_s6dAQoJaOsAeARJbb4pEDxs85PVEhnWbPkN1XCYCQNyxGE3pNjeWoKOHIURWbBcCYzVukdhBHwBhdexPb9GJeOgLDEddDiuz3PyfqJuBuZdk1L0SNTkBrczS2IJ1yRbDcrw&t=AQI6dzMtBoXSrMxN_rM", ok:true, spend:142997.04, purchases:3, roas:2.16, impressions:29695, ctr:1.71},
+  {name:"A4_Reel", campaign:"Reels Catálogo", preview:"https://business.facebook.com/ads/api/preview_iframe.php?d=AQI4aHFqcb_HaDkczOCx_lKwuTHKENXS03wD_PBuBQrSxnTxD78NrwXjyHcpROieymLT0Y_AZkXT4lqBXrUq2ptUwXTl2kIkvKv5XjzaPXd-uPtuDQsMmtfTvuTqGGiBPoB1mV9IwGjdHgaQFUPvmBu5eM5lyrRZkNvsLss3Kbf8e172VIuFRCSvMltxIQ0-RHeJUgmrohtWaOMHyCgQY1Zs8GpVSsNJWAB20mlvDqC6ww&t=AQIuS2FyalFzlT459yA", ok:true, spend:84971.64, purchases:1, roas:0.21, impressions:14616, ctr:1.74},
+];
+
+function money(n){
+  return "$" + Math.round(n).toLocaleString("es-AR");
+}
+
+function renderAds(filter){
+  const tbody = document.getElementById("adsTableBody");
+  tbody.innerHTML = "";
+  const rows = ads.filter(a => filter === "all" || a.campaign === filter)
+                   .sort((a,b) => b.spend - a.spend);
+  rows.forEach(a => {
+    const tr = document.createElement("tr");
+    const previewCell = a.ok
+      ? `<a class="preview-link mono" href="${a.preview}" target="_blank" rel="noopener">Ver preview ↗</a>`
+      : `<span class="mono" style="color:var(--text-soft);">Sin datos<span class="flag">⚠ no disponible</span></span>`;
+    tr.innerHTML = `
+      <td><strong>${a.name}</strong></td>
+      <td>${a.campaign}</td>
+      <td>${previewCell}</td>
+      <td>${a.purchases}</td>
+      <td class="mono">${a.purchases ? money(a.spend/a.purchases) : "—"}</td>
+      <td class="mono">${a.roas != null ? a.roas.toFixed(2)+"x" : "—"}</td>
+      <td class="mono">${a.impressions.toLocaleString("es-AR")}</td>
+      <td class="mono">${a.ctr != null ? a.ctr.toFixed(2)+"%" : "—"}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+renderAds("all");
+document.getElementById("campaignFilter").addEventListener("change", e => renderAds(e.target.value));
+
+/* ---------- Funnel (cone / SVG) ---------- */
+const funnelSteps = [
+  {label:"Impresiones", value:280913},
+  {label:"Clics en el enlace", value:5715},
+  {label:"Visitas a landing", value:4900},
+  {label:"Carritos", value:544},
+  {label:"Pagos iniciados", value:88},
+  {label:"Compras", value:39},
+];
+(function drawFunnel(){
+  const svg = document.getElementById("funnelSvg");
+  const n = funnelSteps.length;
+  const top = 30, bottom = 380;
+  const bandH = (bottom - top) / n;
+  const cx = 450;
+  const maxHalfWidth = 300;
+  const minHalfWidth = 40;
+  const maxVal = funnelSteps[0].value;
+
+  function halfWidthFor(i){
+    // sqrt scale so the visual narrows like a real cone, with a floor so the last band stays visible
+    const ratio = funnelSteps[i].value / maxVal;
+    const w = minHalfWidth + (maxHalfWidth - minHalfWidth) * Math.sqrt(ratio);
+    return w;
+  }
+
+  let svgContent = "";
+  const indigo = "#4f46e5";
+  for(let i=0;i<n;i++){
+    const y0 = top + i*bandH;
+    const y1 = top + (i+1)*bandH;
+    const hw0 = halfWidthFor(i);
+    const hw1 = i+1<n ? halfWidthFor(i+1) : halfWidthFor(i)*0.55;
+    const opacity = 0.35 + (i/(n-1))*0.55;
+    const path = `M ${cx-hw0},${y0} L ${cx+hw0},${y0} L ${cx+hw1},${y1} L ${cx-hw1},${y1} Z`;
+    svgContent += `<path d="${path}" fill="${indigo}" fill-opacity="${opacity.toFixed(2)}" stroke="#ffffff" stroke-width="2"/>`;
+    // ellipse cap between bands for a cone look
+    svgContent += `<ellipse cx="${cx}" cy="${y1}" rx="${hw1}" ry="6" fill="${indigo}" fill-opacity="${(opacity+0.08).toFixed(2)}"/>`;
+
+    const midY = (y0+y1)/2;
+    svgContent += `<text x="${cx}" y="${midY-6}" text-anchor="middle" class="funnel-value">${funnelSteps[i].value.toLocaleString("es-AR")}</text>`;
+    svgContent += `<text x="${cx - hw0 - 14}" y="${y0+16}" text-anchor="end" class="funnel-step-label">${funnelSteps[i].label}</text>`;
+    if(i>0){
+      const pct = (funnelSteps[i].value / funnelSteps[i-1].value * 100).toFixed(1);
+      svgContent += `<text x="${cx + hw0 + 14}" y="${y0+16}" text-anchor="start" class="funnel-pct">${pct}% vs paso anterior</text>`;
+    }
+  }
+  svg.innerHTML = svgContent;
+})();
+
+/* ---------- Daily trend chart ---------- */
+const dailySeries = {
+  labels: ["27 jul","28 jul","29 jul","30 jul","31 jul","1 ago","2 ago"],
+  campaigns: {
+    "Promo 3x2": {
+      spend:     [127953.45,122445.34,127747.56,124199.28,108267.31,98199.54,137848.10],
+      purchases: [5,4,2,8,2,8,3],
+      roas:      [4.54,5.29,2.40,9.97,3.93,11.25,3.18],
+      color: "#4f46e5"
+    },
+    "Ramos CABA": {
+      spend:     [null,null,13445.51,23433.73,22386.88,38401.58,35972.39],
+      purchases: [null,null,0,1,0,1,0],
+      roas:      [null,null,null,2.98,null,3.93,null],
+      color: "#17845a"
+    },
+    "Reels Catálogo": {
+      spend:     [78317.81,97784.60,51866.27,null,null,null,null],
+      purchases: [3,0,1,null,null,null,null],
+      roas:      [3.76,0.15,2.94,null,null,null,null],
+      color: "#c0392b"
+    }
+  }
+};
+
+let currentMetric = "spend";
+const ctx = document.getElementById("trendChart").getContext("2d");
+let trendChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: dailySeries.labels,
+    datasets: Object.entries(dailySeries.campaigns).map(([name, d]) => ({
+      label: name,
+      data: d[currentMetric],
+      borderColor: d.color,
+      backgroundColor: d.color,
+      spanGaps: true,
+      tension: 0.35,
+      pointRadius: 3,
+    }))
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { position: "bottom", labels: { font: { family: "Poppins", size: 12 } } },
+      tooltip: { titleFont:{family:"Poppins"}, bodyFont:{family:"Poppins"} }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { family: "Poppins", size: 11 } } },
+      y: { grid: { color: "#eef0f4" }, ticks: { font: { family: "JetBrains Mono", size: 11 } } }
+    }
+  }
+});
+
+document.querySelectorAll(".metric-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".metric-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentMetric = btn.dataset.metric;
+    trendChart.data.datasets.forEach((ds, i) => {
+      const name = Object.keys(dailySeries.campaigns)[i];
+      ds.data = dailySeries.campaigns[name][currentMetric];
+    });
+    trendChart.update();
+  });
+});
+</script>
+
+</body>
+</html>
