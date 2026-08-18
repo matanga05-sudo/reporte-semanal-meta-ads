@@ -3,477 +3,624 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reporte Semanal Meta Ads – Andez Oficial | 3–9 ago 2026</title>
+<title>Reporte Semanal Meta Ads — Andez Oficial · 10–16 ago 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Poppins',sans-serif;background:#f7f8fa;color:#1e293b;min-height:100vh}
-.page{max-width:1380px;margin:0 auto;padding:28px 24px 60px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:#f7f8fa;color:#1a1a2e;min-height:100vh}
 
 /* Header */
-.report-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid #e2e8f0}
-.report-title h1{font-size:1.45rem;font-weight:700;color:#1e293b}
-.report-title p{font-size:.82rem;color:#64748b;margin-top:2px}
-.report-badge{background:#4f46e5;color:#fff;font-size:.78rem;font-weight:600;padding:6px 14px;border-radius:20px;letter-spacing:.03em}
+.report-header{background:white;border-bottom:1px solid #e8eaf0;padding:18px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(0,0,0,0.05)}
+.report-header h1{font-size:1.1rem;font-weight:600;color:#1a1a2e}
+.report-header .meta{color:#9ca3af;font-size:0.78rem;margin-top:2px}
+.badge{background:#ede9fe;color:#4f46e5;padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:600;font-family:'JetBrains Mono',monospace}
+
+/* Container */
+.container{max-width:1380px;margin:0 auto;padding:28px 24px}
 
 /* Section titles */
-.section-title{font-size:1rem;font-weight:600;color:#1e293b;margin-bottom:14px;margin-top:32px;display:flex;align-items:center;gap:8px}
-.section-title::before{content:'';display:block;width:4px;height:18px;background:#4f46e5;border-radius:2px}
-
-/* Cards */
-.card{background:#fff;border:1px solid #e8ecf0;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.section-title{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#9ca3af;margin-bottom:14px;margin-top:36px;padding-bottom:6px;border-bottom:1px solid #f0f1f5}
+.section-title:first-of-type{margin-top:4px}
 
 /* Scorecards */
-.scorecards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.scorecard{padding:16px 18px;border-radius:12px;background:#fff;border:1px solid #e8ecf0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.scorecard .label{font-size:.73rem;color:#64748b;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-.scorecard .value{font-size:1.35rem;font-weight:700;color:#1e293b;line-height:1.1}
-.scorecard .value.accent{color:#4f46e5}
-.scorecard .sub{font-size:.74rem;color:#94a3b8;margin-top:4px;font-family:'JetBrains Mono',monospace}
-.scorecard.highlight{border-left:3px solid #4f46e5}
+.scorecards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.card{background:white;border:1px solid #e8eaf0;border-radius:12px;padding:16px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.04);transition:box-shadow .15s}
+.card:hover{box-shadow:0 3px 10px rgba(0,0,0,0.08)}
+.card-label{font-size:0.67rem;color:#9ca3af;font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.07em}
+.card-value{font-size:1.45rem;font-weight:700;color:#1a1a2e;line-height:1.1;font-family:'JetBrains Mono',monospace}
+.card-value.accent{color:#4f46e5}
+.card-value.good{color:#17845a}
+.card-sub{font-size:0.67rem;color:#9ca3af;margin-top:4px}
 
 /* Campaign cards */
-.campaigns-grid{display:grid;gap:14px}
-.campaigns-grid.c2{grid-template-columns:repeat(2,1fr)}
-.campaigns-grid.c3{grid-template-columns:repeat(3,1fr)}
-.campaigns-grid.c4{grid-template-columns:repeat(4,1fr)}
-.camp-card{padding:18px 20px;border-radius:12px;background:#fff;border:1px solid #e8ecf0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.camp-card .camp-name{font-size:1rem;font-weight:700;color:#1e293b;margin-bottom:2px}
-.camp-card .camp-tech{font-size:.7rem;color:#94a3b8;font-family:'JetBrains Mono',monospace;margin-bottom:10px}
-.camp-card .camp-status{display:inline-block;font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:10px;margin-bottom:12px}
-.camp-card .camp-status.active{background:#dcfce7;color:#15803d}
-.camp-card .camp-status.paused{background:#fef9c3;color:#a16207}
-.camp-card .metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.camp-card .m-item .m-label{font-size:.68rem;color:#64748b;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
-.camp-card .m-item .m-val{font-size:.95rem;font-weight:700;color:#1e293b}
-.camp-card .m-item .m-val.green{color:#17845a}
-.camp-card .m-item .m-val.muted{color:#94a3b8}
+.campaigns-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.campaigns-grid{grid-template-columns:1fr}}
+.campaign-card{background:white;border:1px solid #e8eaf0;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.camp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.camp-name{font-weight:600;font-size:1rem;color:#1a1a2e}
+.camp-tech{font-size:0.67rem;color:#9ca3af;margin-top:3px;font-family:'JetBrains Mono',monospace;word-break:break-all}
+.status-badge{padding:3px 9px;border-radius:20px;font-size:0.65rem;font-weight:600;white-space:nowrap;flex-shrink:0;margin-left:8px}
+.status-active{background:#dcfce7;color:#17845a}
+.camp-metrics{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.cm-label{font-size:0.64rem;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px}
+.cm-value{font-size:1rem;font-weight:600;color:#1a1a2e;font-family:'JetBrains Mono',monospace}
+.cm-value.roas-good{color:#17845a}
+.cm-value.roas-ok{color:#4f46e5}
+.cm-value.roas-na{color:#9ca3af;font-weight:400}
 
 /* Ads table */
-.table-filter{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-.table-filter label{font-size:.82rem;font-weight:500;color:#64748b}
-.table-filter select{font-family:'Poppins',sans-serif;font-size:.82rem;padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;color:#1e293b;cursor:pointer;outline:none}
-.table-filter select:focus{border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,.1)}
-.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid #e8ecf0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-table{width:100%;border-collapse:collapse;font-size:.8rem;background:#fff;border-radius:12px;overflow:hidden}
-table thead tr{background:#f1f5f9}
-table th{padding:10px 12px;text-align:left;font-size:.7rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-table td{padding:10px 12px;border-top:1px solid #f1f5f9;color:#1e293b;vertical-align:middle}
-table tr:hover td{background:#fafbff}
-table td.mono{font-family:'JetBrains Mono',monospace;font-size:.75rem}
-table td.preview-cell a{color:#4f46e5;text-decoration:none;font-size:.72rem;border:1px solid #c7d2fe;padding:2px 7px;border-radius:6px;white-space:nowrap}
-table td.preview-cell a:hover{background:#eef2ff}
-table td.na{color:#cbd5e1;font-size:.78rem}
-.roas-hi{color:#17845a;font-weight:600}
-.roas-lo{color:#c0392b;font-weight:600}
-.roas-mid{color:#d97706;font-weight:600}
+.table-wrapper{background:white;border:1px solid #e8eaf0;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow:hidden}
+.table-toolbar{padding:12px 18px;border-bottom:1px solid #f0f1f5;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.filter-label{font-size:0.78rem;color:#6b7280;font-weight:500}
+select.filter-select{border:1px solid #e8eaf0;border-radius:8px;padding:5px 10px;font-size:0.78rem;font-family:'Poppins',sans-serif;color:#1a1a2e;background:white;cursor:pointer;outline:none}
+select.filter-select:focus{border-color:#4f46e5}
+table{width:100%;border-collapse:collapse;font-size:0.81rem}
+thead{background:#f9fafb}
+th{padding:9px 14px;text-align:left;font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#9ca3af;border-bottom:1px solid #f0f1f5}
+th.right{text-align:right}
+td{padding:10px 14px;border-bottom:1px solid #f9fafb;vertical-align:middle}
+td.right{text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.76rem}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fafbff}
+.ad-name{font-weight:500;color:#1a1a2e;font-size:0.83rem}
+.ad-camp-badge{display:inline-block;font-size:0.6rem;padding:2px 7px;border-radius:8px;font-weight:500;margin-top:2px}
+.badge-3x2{background:#ede9fe;color:#4f46e5}
+.badge-2x1{background:#f0fdf4;color:#17845a}
+.badge-brand{background:#fff7ed;color:#d97706}
+.preview-btn{display:inline-block;padding:4px 10px;border-radius:6px;font-size:0.68rem;font-weight:500;background:#ede9fe;color:#4f46e5;text-decoration:none;white-space:nowrap;transition:background .12s}
+.preview-btn:hover{background:#ddd6fe}
+.v-good{color:#17845a;font-weight:600}
+.v-ok{color:#4f46e5;font-weight:600}
+.v-low{color:#d97706;font-weight:600}
+.v-na{color:#9ca3af}
 
 /* Funnel */
-.funnel-section{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:center}
-.funnel-svg-wrap{display:flex;justify-content:center}
-.funnel-legend{display:flex;flex-direction:column;gap:0}
-.funnel-legend .fl-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #f1f5f9}
-.funnel-legend .fl-item:last-child{border-bottom:none}
-.funnel-legend .fl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.funnel-legend .fl-label{font-size:.75rem;color:#64748b;font-weight:500}
-.funnel-legend .fl-value{font-size:1rem;font-weight:700;color:#1e293b;margin-top:1px;font-family:'JetBrains Mono',monospace}
-.funnel-legend .fl-conv{font-size:.7rem;color:#94a3b8;margin-top:1px}
+.funnel-section{background:white;border:1px solid #e8eaf0;border-radius:12px;padding:24px 12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);overflow-x:auto}
+.funnel-inner{display:flex;align-items:center;justify-content:center;min-width:600px}
 
-/* Daily chart */
-.chart-controls{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.chart-controls span{font-size:.8rem;font-weight:500;color:#64748b}
-.metric-btn{font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:500;padding:5px 14px;border:1px solid #e2e8f0;border-radius:20px;background:#fff;color:#64748b;cursor:pointer;transition:all .15s}
-.metric-btn.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
-.chart-wrap{border-radius:12px;background:#fff;border:1px solid #e8ecf0;padding:20px 20px 16px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-@media(max-width:900px){
-  .scorecards{grid-template-columns:repeat(2,1fr)}
-  .campaigns-grid.c4,.campaigns-grid.c3{grid-template-columns:repeat(2,1fr)}
-  .funnel-section{grid-template-columns:1fr}
-  .two-col{grid-template-columns:1fr}
-}
+/* Chart */
+.chart-card{background:white;border:1px solid #e8eaf0;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.chart-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.chart-toolbar h3{font-size:0.9rem;font-weight:600;color:#1a1a2e}
+.metric-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.metric-tab{padding:5px 13px;border-radius:8px;font-size:0.73rem;font-weight:500;cursor:pointer;border:1px solid #e8eaf0;background:white;color:#6b7280;font-family:'Poppins',sans-serif;transition:all .12s}
+.metric-tab.active,.metric-tab:hover{background:#4f46e5;color:white;border-color:#4f46e5}
+.metric-tab.active{cursor:default}
+
+/* Footer */
+.report-footer{text-align:center;padding:24px;font-size:0.7rem;color:#9ca3af;margin-top:8px}
 </style>
 </head>
 <body>
-<div class="page">
 
-<!-- Header -->
 <div class="report-header">
-  <div class="report-title">
-    <h1>📊 Reporte Semanal · Andez Oficial</h1>
-    <p>Período: <strong>3 de agosto – 9 de agosto de 2026</strong> · Generado el 10 de agosto de 2026</p>
+  <div>
+    <h1>Reporte Semanal · Andez Oficial</h1>
+    <div class="meta">Meta Ads &nbsp;·&nbsp; 10 – 16 agosto 2026 (lunes a domingo)</div>
   </div>
-  <div class="report-badge">Meta Ads Weekly</div>
+  <span class="badge">act_1557302461462659</span>
 </div>
 
-<!-- Scorecards -->
-<div class="section-title">Métricas generales</div>
-<div class="scorecards" id="scorecards"></div>
+<div class="container">
 
-<!-- Campaign Cards -->
-<div class="section-title">Por campaña</div>
-<div class="campaigns-grid c4" id="campaignCards"></div>
+  <!-- ═══ MÉTRICAS GENERALES ═══ -->
+  <div class="section-title">Métricas Generales</div>
+  <div class="scorecards">
+    <div class="card">
+      <div class="card-label">Inversión Total</div>
+      <div class="card-value accent">$1.598.445</div>
+      <div class="card-sub">ARS</div>
+    </div>
+    <div class="card">
+      <div class="card-label">ROAS</div>
+      <div class="card-value good">4.46x</div>
+      <div class="card-sub">retorno sobre inversión</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Valor de Compra</div>
+      <div class="card-value">$7.132.414</div>
+      <div class="card-sub">ARS atribuidos</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Compras</div>
+      <div class="card-value accent">56</div>
+      <div class="card-sub">Costo/Compra: $28.543</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Campañas Activas</div>
+      <div class="card-value accent">3</div>
+      <div class="card-sub">con gasto en la semana</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Anuncios Activos</div>
+      <div class="card-value accent">33</div>
+      <div class="card-sub">con gasto registrado</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Impresiones</div>
+      <div class="card-value">605.043</div>
+      <div class="card-sub">Frecuencia: 2.84</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Clics en Enlace</div>
+      <div class="card-value">7.702</div>
+      <div class="card-sub">CTR: 1,66% · CPC $159</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Visitas Landing</div>
+      <div class="card-value">6.871</div>
+      <div class="card-sub">89,2% de los clics</div>
+    </div>
+    <div class="card">
+      <div class="card-label">View Content</div>
+      <div class="card-value">10.458</div>
+      <div class="card-sub">vistas de producto</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Carritos</div>
+      <div class="card-value">896</div>
+      <div class="card-sub">13,0% de landings</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Pagos Iniciados</div>
+      <div class="card-value">124</div>
+      <div class="card-sub">13,8% de carritos</div>
+    </div>
+  </div>
 
-<!-- Ads Dashboard -->
-<div class="section-title">Dashboard de anuncios</div>
-<div class="table-filter">
-  <label>Filtrar por campaña:</label>
-  <select id="campFilter" onchange="renderAdsTable()">
-    <option value="all">Todas las campañas</option>
-    <option value="3x2">Promo 3x2</option>
-    <option value="2x1">Promo 2x1</option>
-    <option value="ramos">CABA / Ramos (catálogo)</option>
-    <option value="brand">Brand Awareness Local</option>
-  </select>
-</div>
-<div class="table-wrap"><table id="adsTable"></table></div>
+  <!-- ═══ CAMPAÑAS ═══ -->
+  <div class="section-title">Campañas</div>
+  <div class="campaigns-grid">
 
-<!-- Funnel -->
-<div class="section-title">Embudo de conversión</div>
-<div class="card" style="padding:24px">
+    <div class="campaign-card">
+      <div class="camp-header">
+        <div>
+          <div class="camp-name">Promo 3×2</div>
+          <div class="camp-tech">catalogo_promo_3x2</div>
+        </div>
+        <span class="status-badge status-active">Activa</span>
+      </div>
+      <div class="camp-metrics">
+        <div><div class="cm-label">Inversión</div><div class="cm-value">$833.906</div></div>
+        <div><div class="cm-label">ROAS</div><div class="cm-value roas-good">4.79x</div></div>
+        <div><div class="cm-label">Compras</div><div class="cm-value">27</div></div>
+        <div><div class="cm-label">Costo/Compra</div><div class="cm-value">$30.885</div></div>
+        <div><div class="cm-label">Impresiones</div><div class="cm-value">183.622</div></div>
+        <div><div class="cm-label">Carritos</div><div class="cm-value">285</div></div>
+        <div><div class="cm-label">CTR enlace</div><div class="cm-value">2,52%</div></div>
+        <div><div class="cm-label">Frecuencia</div><div class="cm-value">3.61</div></div>
+      </div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="camp-header">
+        <div>
+          <div class="camp-name">Promo 2×1</div>
+          <div class="camp-tech">catalogo_promo_2x1</div>
+        </div>
+        <span class="status-badge status-active">Activa</span>
+      </div>
+      <div class="camp-metrics">
+        <div><div class="cm-label">Inversión</div><div class="cm-value">$724.434</div></div>
+        <div><div class="cm-label">ROAS</div><div class="cm-value roas-ok">4.33x</div></div>
+        <div><div class="cm-label">Compras</div><div class="cm-value">29</div></div>
+        <div><div class="cm-label">Costo/Compra</div><div class="cm-value">$24.980</div></div>
+        <div><div class="cm-label">Impresiones</div><div class="cm-value">238.742</div></div>
+        <div><div class="cm-label">Carritos</div><div class="cm-value">608</div></div>
+        <div><div class="cm-label">CTR enlace</div><div class="cm-value">2,13%</div></div>
+        <div><div class="cm-label">Frecuencia</div><div class="cm-value">3.27</div></div>
+      </div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="camp-header">
+        <div>
+          <div class="camp-name">Brand Awareness Ramos</div>
+          <div class="camp-tech">brand_awarness_caba_ramos_local_fisico</div>
+        </div>
+        <span class="status-badge status-active">Activa</span>
+      </div>
+      <div class="camp-metrics">
+        <div><div class="cm-label">Inversión</div><div class="cm-value">$40.104</div></div>
+        <div><div class="cm-label">Objetivo</div><div class="cm-value roas-na">Branding</div></div>
+        <div><div class="cm-label">Alcance</div><div class="cm-value">110.764</div></div>
+        <div><div class="cm-label">Impresiones</div><div class="cm-value">182.679</div></div>
+        <div><div class="cm-label">Clics enlace</div><div class="cm-value">166</div></div>
+        <div><div class="cm-label">CTR enlace</div><div class="cm-value">0,19%</div></div>
+        <div><div class="cm-label">Frecuencia</div><div class="cm-value">1.65</div></div>
+        <div><div class="cm-label">CPM</div><div class="cm-value">$220</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ DASHBOARD DE ANUNCIOS ═══ -->
+  <div class="section-title">Dashboard de Anuncios</div>
+  <div class="table-wrapper">
+    <div class="table-toolbar">
+      <span class="filter-label">Campaña:</span>
+      <select class="filter-select" id="campFilter" onchange="filterTable()">
+        <option value="all">Todas las campañas</option>
+        <option value="3x2">Promo 3×2</option>
+        <option value="2x1">Promo 2×1</option>
+        <option value="brand">Brand Awareness Ramos</option>
+      </select>
+      <span style="margin-left:auto;color:#9ca3af;font-size:0.72rem">ROAS ≥5x <span style="color:#17845a">●</span> 3–5x <span style="color:#4f46e5">●</span> &lt;3x <span style="color:#d97706">●</span> · Agrupado por nombre</span>
+    </div>
+    <table id="adsTable">
+      <thead>
+        <tr>
+          <th>Anuncio</th>
+          <th>Preview</th>
+          <th class="right">Importe gastado</th>
+          <th class="right">Compras</th>
+          <th class="right">Costo/Compra</th>
+          <th class="right">ROAS</th>
+          <th class="right">Impresiones</th>
+          <th class="right">CTR Enlace</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Promo 3×2 -->
+        <tr data-camp="3x2">
+          <td><div class="ad-name">A3_promo3x2_Dinamico_v1</div><span class="ad-camp-badge badge-3x2">Promo 3×2</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120249764843890128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$332.627 ARS</td>
+          <td class="right">12</td>
+          <td class="right">$27.719 ARS</td>
+          <td class="right v-good">5.36x</td>
+          <td class="right">71.668</td>
+          <td class="right">1,88%</td>
+        </tr>
+        <tr data-camp="3x2">
+          <td><div class="ad-name">A3_promo3x2_Dinamico_v2</div><span class="ad-camp-badge badge-3x2">Promo 3×2</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120249764830550128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$268.494 ARS</td>
+          <td class="right">7</td>
+          <td class="right">$38.356 ARS</td>
+          <td class="right v-low">2.72x</td>
+          <td class="right">63.803</td>
+          <td class="right">1,98%</td>
+        </tr>
+        <tr data-camp="3x2">
+          <td><div class="ad-name">A2_promo_express</div><span class="ad-camp-badge badge-3x2">Promo 3×2</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120249764431060128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$107.482 ARS</td>
+          <td class="right">4</td>
+          <td class="right">$26.870 ARS</td>
+          <td class="right v-good">8.11x</td>
+          <td class="right">24.084</td>
+          <td class="right">2,01%</td>
+        </tr>
+        <tr data-camp="3x2">
+          <td><div class="ad-name">A4_promo_express</div><span class="ad-camp-badge badge-3x2">Promo 3×2</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120249795673370128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$85.530 ARS</td>
+          <td class="right">2</td>
+          <td class="right">$42.765 ARS</td>
+          <td class="right v-ok">3.68x</td>
+          <td class="right">16.335</td>
+          <td class="right">2,30%</td>
+        </tr>
+        <tr data-camp="3x2">
+          <td><div class="ad-name">A1_promo_express</div><span class="ad-camp-badge badge-3x2">Promo 3×2</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120249764431080128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$39.770 ARS</td>
+          <td class="right">2</td>
+          <td class="right">$19.885 ARS</td>
+          <td class="right v-good">7.49x</td>
+          <td class="right">7.732</td>
+          <td class="right">2,20%</td>
+        </tr>
+        <!-- Promo 2×1 -->
+        <tr data-camp="2x1">
+          <td><div class="ad-name">A1_promo_2x1_Dinamico_v1</div><span class="ad-camp-badge badge-2x1">Promo 2×1</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250293796720128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$255.840 ARS</td>
+          <td class="right">15</td>
+          <td class="right">$17.056 ARS</td>
+          <td class="right v-good">6.80x</td>
+          <td class="right">102.573</td>
+          <td class="right">1,34%</td>
+        </tr>
+        <tr data-camp="2x1">
+          <td><div class="ad-name">A3_promo_2x1_carrusel</div><span class="ad-camp-badge badge-2x1">Promo 2×1</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250293796660128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$204.481 ARS</td>
+          <td class="right">6</td>
+          <td class="right">$34.080 ARS</td>
+          <td class="right v-low">2.68x</td>
+          <td class="right">63.541</td>
+          <td class="right">2,02%</td>
+        </tr>
+        <tr data-camp="2x1">
+          <td><div class="ad-name">A5_promo_2x1_Reel</div><span class="ad-camp-badge badge-2x1">Promo 2×1</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250384366900128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$143.477 ARS</td>
+          <td class="right">4</td>
+          <td class="right">$35.869 ARS</td>
+          <td class="right v-ok">3.43x</td>
+          <td class="right">32.649</td>
+          <td class="right">1,61%</td>
+        </tr>
+        <tr data-camp="2x1">
+          <td><div class="ad-name">A2_promo_2x1_Dinamico_v2</div><span class="ad-camp-badge badge-2x1">Promo 2×1</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250293796670128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$111.411 ARS</td>
+          <td class="right">4</td>
+          <td class="right">$27.853 ARS</td>
+          <td class="right v-ok">3.19x</td>
+          <td class="right">38.173</td>
+          <td class="right">1,73%</td>
+        </tr>
+        <tr data-camp="2x1">
+          <td><div class="ad-name">A4_promo_2x1_suelta_catalogo</div><span class="ad-camp-badge badge-2x1">Promo 2×1</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250293796730128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$9.225 ARS</td>
+          <td class="right">0</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right">1.806</td>
+          <td class="right">2,71%</td>
+        </tr>
+        <!-- Brand Awareness -->
+        <tr data-camp="brand">
+          <td><div class="ad-name">A3_CABA_Ramos</div><span class="ad-camp-badge badge-brand">Brand Awareness</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250323201320128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$22.306 ARS</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right">101.859</td>
+          <td class="right">0,09%</td>
+        </tr>
+        <tr data-camp="brand">
+          <td><div class="ad-name">A2_CABA_Ramos</div><span class="ad-camp-badge badge-brand">Brand Awareness</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250323115740128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$17.081 ARS</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right">77.545</td>
+          <td class="right">0,09%</td>
+        </tr>
+        <tr data-camp="brand">
+          <td><div class="ad-name">A4_CABA_Ramos_Reel</div><span class="ad-camp-badge badge-brand">Brand Awareness</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250323201310128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$331 ARS</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right">1.470</td>
+          <td class="right">0,00%</td>
+        </tr>
+        <tr data-camp="brand">
+          <td><div class="ad-name">A1_CABA_Ramos</div><span class="ad-camp-badge badge-brand">Brand Awareness</span></td>
+          <td><a class="preview-btn" href="https://www.facebook.com/ads/archive/render_ad/?id=120250323201300128" target="_blank">Ver preview ↗</a></td>
+          <td class="right">$385 ARS</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right v-na">—</td>
+          <td class="right">1.805</td>
+          <td class="right">0,06%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══ EMBUDO DE CONVERSIÓN ═══ -->
+  <div class="section-title">Embudo de Conversión</div>
   <div class="funnel-section">
-    <div class="funnel-svg-wrap"><svg id="funnelSvg" viewBox="0 0 460 500" width="460" height="500"></svg></div>
-    <div class="funnel-legend" id="funnelLegend"></div>
+    <div class="funnel-inner">
+      <svg viewBox="0 0 820 520" width="820" height="520" style="max-width:100%">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5"/><stop offset="100%" stop-color="#3730a3"/></linearGradient>
+          <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5b50e8"/><stop offset="100%" stop-color="#4338ca"/></linearGradient>
+          <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#4f46e5"/></linearGradient>
+          <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#6d28d9"/></linearGradient>
+          <linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+          <linearGradient id="g6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
+          <linearGradient id="g7" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient>
+        </defs>
+
+        <!-- BAND 1: Impressiones 605.043 -->
+        <ellipse cx="310" cy="28" rx="280" ry="18" fill="#3730a3" opacity="0.7"/>
+        <polygon points="30,28 590,28 500,85 120,85" fill="url(#g1)"/>
+        <ellipse cx="310" cy="85" rx="190" ry="13" fill="#3730a3" opacity="0.6"/>
+        <text x="620" y="49" font-family="Poppins,sans-serif" font-size="13" font-weight="600" fill="#1a1a2e">Impresiones</text>
+        <text x="620" y="66" font-family="JetBrains Mono,monospace" font-size="12" fill="#4f46e5">605.043</text>
+        <line x1="590" y1="56" x2="615" y2="56" stroke="#e8eaf0" stroke-width="1"/>
+
+        <!-- BAND 2: Alcance 213.318 → 35,3% -->
+        <polygon points="120,88 500,88 445,145 175,145" fill="url(#g2)"/>
+        <ellipse cx="310" cy="145" rx="135" ry="11" fill="#3730a3" opacity="0.55"/>
+        <text x="620" y="109" font-family="Poppins,sans-serif" font-size="13" font-weight="600" fill="#1a1a2e">Alcance</text>
+        <text x="620" y="126" font-family="JetBrains Mono,monospace" font-size="12" fill="#4f46e5">213.318</text>
+        <text x="620" y="140" font-family="Poppins,sans-serif" font-size="10" fill="#9ca3af">35,3% de impresiones</text>
+        <line x1="445" y1="116" x2="615" y2="116" stroke="#e8eaf0" stroke-width="1"/>
+
+        <!-- BAND 3: Clics enlace 7.702 -->
+        <polygon points="175,148 445,148 405,200 215,200" fill="url(#g3)"/>
+        <ellipse cx="310" cy="200" rx="95" ry="9" fill="#4338ca" opacity="0.6"/>
+        <text x="620" y="167" font-family="Poppins,sans-serif" font-size="13" font-weight="600" fill="#1a1a2e">Clics en Enlace</text>
+        <text x="620" y="184" font-family="JetBrains Mono,monospace" font-size="12" fill="#4f46e5">7.702</text>
+        <text x="620" y="198" font-family="Poppins,sans-serif" font-size="10" fill="#9ca3af">3,6% del alcance</text>
+        <line x1="405" y1="174" x2="615" y2="174" stroke="#e8eaf0" stroke-width="1"/>
+
+        <!-- BAND 4: Visitas Landing 6.871 → 89,2% -->
+        <polygon points="215,203 405,203 378,255 242,255" fill="url(#g4)"/>
+        <ellipse cx="310" cy="255" rx="68" ry="8" fill="#6d28d9" opacity="0.6"/>
+        <text x="620" y="222" font-family="Poppins,sans-serif" font-size="13" font-weight="600" fill="#1a1a2e">Visitas Landing</text>
+        <text x="620" y="239" font-family="JetBrains Mono,monospace" font-size="12" fill="#4f46e5">6.871</text>
+        <text x="620" y="253" font-family="Poppins,sans-serif" font-size="10" fill="#9ca3af">89,2% de los clics</text>
+        <line x1="378" y1="229" x2="615" y2="229" stroke="#e8eaf0" stroke-width="1"/>
+
+        <!-- BAND 5: Carritos 896 → 13,0% -->
+        <polygon points="242,258 378,258 356,310 264,310" fill="url(#g5)"/>
+        <ellipse cx="310" cy="310" rx="46" ry="7" fill="#7c3aed" opacity="0.6"/>
+        <text x="620" y="277" font-family="Poppins,sans-serif" font-size="13" font-weight="600" fill="#1a1a2e">Add to Cart</text>
+        <text x="620" y="294" font-family="JetBrains Mono,monospace" font-size="12" fill="#4f46e5">896</text>
+        <text x="620" y="308" font-family="Poppins,sans-serif" font-size="10" fill="#9ca3af">13,0% de landings</text>
+        <line x1="356" y1="284" x2="615" y2="284" stroke="#e8eaf0" stroke-width="1"/>
+
+        <!-- BAND 6: Pagos Iniciados 124 → 13,8% -->
+        <polygon points="264,313 356,313 340,365 280,365" fill="url(#g6)"/>
+        <ellipse cx="310" cy="365" rx="30" ry="6" fill="#8b5cf6" opacity="0.6"/>
+        <text x="620" y="332" font-family="Poppins,sans-serif" font-size="13" font-weight="600" fill="#1a1a2e">Pagos Iniciados</text>
+        <text x="620" y="349" font-family="JetBrains Mono,monospace" font-size="12" fill="#4f46e5">124</text>
+        <text x="620" y="363" font-family="Poppins,sans-serif" font-size="10" fill="#9ca3af">13,8% de carritos</text>
+        <line x1="340" y1="339" x2="615" y2="339" stroke="#e8eaf0" stroke-width="1"/>
+
+        <!-- BAND 7: Compras 56 → 45,2% -->
+        <polygon points="280,368 340,368 326,420 294,420" fill="url(#g7)"/>
+        <ellipse cx="310" cy="420" rx="16" ry="5" fill="#a78bfa" opacity="0.8"/>
+        <text x="620" y="387" font-family="Poppins,sans-serif" font-size="13" font-weight="600" fill="#1a1a2e">Compras</text>
+        <text x="620" y="404" font-family="JetBrains Mono,monospace" font-size="14" font-weight="700" fill="#4f46e5">56</text>
+        <text x="620" y="418" font-family="Poppins,sans-serif" font-size="10" fill="#9ca3af">45,2% de checkouts</text>
+        <line x1="326" y1="394" x2="615" y2="394" stroke="#e8eaf0" stroke-width="1"/>
+
+        <text x="310" y="460" text-anchor="middle" font-family="Poppins,sans-serif" font-size="11" fill="#9ca3af">Conversión total: 0,009% impresiones → compra</text>
+        <text x="310" y="476" text-anchor="middle" font-family="Poppins,sans-serif" font-size="12" font-weight="600" fill="#4f46e5">ROAS global: 4.46x</text>
+      </svg>
+    </div>
   </div>
+
+  <!-- ═══ EVOLUCIÓN DIARIA ═══ -->
+  <div class="section-title">Evolución Diaria por Campaña</div>
+  <div class="chart-card">
+    <div class="chart-toolbar">
+      <h3>Evolución 10–16 ago 2026</h3>
+      <div class="metric-tabs">
+        <button class="metric-tab active" onclick="switchMetric('spend',this)">Inversión (ARS)</button>
+        <button class="metric-tab" onclick="switchMetric('purchases',this)">Compras</button>
+        <button class="metric-tab" onclick="switchMetric('roas',this)">ROAS</button>
+      </div>
+    </div>
+    <canvas id="evolutionChart" style="max-height:320px"></canvas>
+  </div>
+
 </div>
 
-<!-- Daily Chart -->
-<div class="section-title">Evolución diaria por campaña</div>
-<div class="chart-wrap">
-  <div class="chart-controls">
-    <span>Métrica:</span>
-    <button class="metric-btn active" onclick="switchMetric('spend',this)">Inversión</button>
-    <button class="metric-btn" onclick="switchMetric('purchases',this)">Compras</button>
-    <button class="metric-btn" onclick="switchMetric('roas',this)">ROAS</button>
-  </div>
-  <canvas id="dailyChart" height="90"></canvas>
+<div class="report-footer">
+  Generado automáticamente · 18 ago 2026 &nbsp;·&nbsp; Andez Oficial · Meta Ads &nbsp;·&nbsp; Período: 10–16 ago 2026 (lun–dom) &nbsp;·&nbsp; act_1557302461462659
 </div>
-
-</div><!-- /page -->
 
 <script>
-// ─── DATA ──────────────────────────────────────────────────────────────────
-
-const scorecardData = [
-  {label:'Inversión',value:'$1.377.115',sub:'ARS',highlight:true,accent:false},
-  {label:'ROAS',value:'4,81x',sub:'promedio cuenta',highlight:true,accent:true},
-  {label:'Compras',value:'48',sub:'total semana',highlight:false,accent:false},
-  {label:'Costo / Compra',value:'$28.690',sub:'ARS promedio',highlight:false,accent:false},
-  {label:'Valor de Compras',value:'$6.622.251',sub:'ARS atribuido',highlight:false,accent:false},
-  {label:'Campañas activas',value:'3',sub:'+ 1 pausada con gasto',highlight:false,accent:false},
-  {label:'Anuncios activos',value:'46',sub:'con gasto en la semana',highlight:false,accent:false},
-  {label:'Impresiones',value:'615.685',sub:'total cuenta',highlight:false,accent:false},
-  {label:'Clics en el enlace',value:'6.563',sub:'outbound clicks',highlight:false,accent:false},
-  {label:'Visitas a landing',value:'5.674',sub:'omni_landing_page_view',highlight:false,accent:false},
-  {label:'ViewContent',value:'9.097',sub:'vistas de producto',highlight:false,accent:false},
-  {label:'Carritos',value:'921',sub:'add to cart',highlight:false,accent:false},
-  {label:'Pagos iniciados',value:'136',sub:'checkout iniciado',highlight:false,accent:false},
-  {label:'Alcance',value:'257.641',sub:'personas únicas',highlight:false,accent:false},
-];
-
-const campaignsData = [
-  {
-    id:'3x2', name:'Promo 3x2', tech:'catalogo_promo_3x2',
-    status:'ACTIVA', statusKey:'active',
-    spend:'$884.863', roas:'4,95x', purchases:29, costPerPurchase:'$30.513', impressions:'183.361', ctr:'2,49%',
-    reach:'49.643', addToCart:454, checkout:78, value:'$4.381.350'
-  },
-  {
-    id:'2x1', name:'Promo 2x1', tech:'catalogo_promo_2x1',
-    status:'ACTIVA', statusKey:'active',
-    spend:'$358.488', roas:'5,33x', purchases:16, costPerPurchase:'$22.406', impressions:'108.397', ctr:'2,62%',
-    reach:'35.231', addToCart:445, checkout:54, value:'$1.911.512'
-  },
-  {
-    id:'ramos', name:'CABA / Ramos (catálogo)', tech:'catalogo_caba_ramos',
-    status:'PAUSADA', statusKey:'paused',
-    spend:'$70.558', roas:'4,67x', purchases:3, costPerPurchase:'$23.519', impressions:'21.190', ctr:'3,30%',
-    reach:'10.542', addToCart:21, checkout:3, value:'$329.389'
-  },
-  {
-    id:'brand', name:'Brand Awareness Local', tech:'brand_awarness_caba_ramos_local_fisico',
-    status:'ACTIVA', statusKey:'active',
-    spend:'$63.204', roas:'—', purchases:null, costPerPurchase:'—', impressions:'302.737', ctr:'0,19%',
-    reach:'186.240', addToCart:null, checkout:null, value:'—'
-  },
-];
-
-// Ads data: grouped by name, per campaign
-const adsByCamp = {
-  all: [
-    {name:'A3_promo3x2_Dinamico_v1', camp:'Promo 3x2', spend:239346, purchases:7, value:887342, roas:3.71, impressions:51360, ctr:1.97, cpp:34192, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQJ47hr5Rs24FpiLu5usoWmmd0H3g-gLIRxxngOaJXw66EI-andDlf2D6YHwnids0p70N2ZyncapgYd11qw_6rb_8d4zis8ObN1DNTgnWhXVFX8UoiUmu6lvsFLaTGGvLA-nuycAooiheVD5TlGuBvCr3ZZqo_rnrhjzY5Nk1PnIvpXeb731A4eGMhG4ITT4_toIJfG19ARrImEs6xhoVkGAVbBfGyD-TtvWEJuxN465Dg&t=AQIwwaL8pb6jNTEOxWI'},
-    {name:'A3_promo3x2_Dinamico_v2', camp:'Promo 3x2', spend:204036, purchases:6, value:1145253, roas:5.61, impressions:43802, ctr:2.11, cpp:34006, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQIyBterJc_h7fozDYbYhgSlsgdNW-8dpBkp18QGGtzhxRr0gWmmDytQnUQTKsPYp4nkKBHN3yx0bk7qahRD82WH9gjFunK7wxZELOj6UCl5U288wh2PsRwb2rUF654SvZA9vVvqr_QJLYKsvynrbqFevod9dYhfSESPh2Alc5Itk1gfIHKe-eRvgMRQQofbXKT4_aBuTagZx_i8jdVqMcGfAvijybPq5e6hgqwLOaqa8Q&t=AQJ9N2qq_WXOayGpFMQ'},
-    {name:'A1_promo_express',         camp:'Promo 3x2', spend:197507, purchases:5, value:656512, roas:3.32, impressions:41781, ctr:1.76, cpp:39501, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQJVTteL2bz5OZkngCwRRDv_crgOR7Uz5bq6OzZ62UMWpdDbr42GWVWIdwGRtmLC50zJ8C8y79Hi4E5gJ3_BYFTqjypaZcTVmS-D_nacGgDeST87BNWW_DXRyjySASNKkPusfQgXCinIFVlJ2EMOUcLyuxK1_wUw61Lql9GAfQEnHxOWGLppTdSv1qfwnrKg5WxLms9xrMcGxT4jYFTX6ZfqA9NhHMohOO79Aa-KWYS5Ow&t=AQJU6526kHsp1NEGu78'},
-    {name:'A4_promo_express',         camp:'Promo 3x2', spend:135299, purchases:5, value:758756, roas:5.61, impressions:26306, ctr:2.03, cpp:27060, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLp_Nwu5wmynyNxwTidSPHMia5mTF_F1-MVlsC6Nu2sZza-F_JcGTKXNHTtFCuhYlmGDVRG2ir3grRApq6XupnHwrd2RcFd6IJR8nC9vlgxINKRIqPpm_8MU4eambnmguqu4CjaRivMZTYU4waVW0KjG0PFOVqUM0WF559n_vqe_PKgo2hjpzU7MwxJx-NU9VKNGTeChyRm-DY2DAE_vBLxOPPpXZ-_KYm2DMR7Ju7Brw&t=AQI3zCaIqoBO_YojNYI'},
-    {name:'A5_promo_2x1_Reel',        camp:'Promo 2x1', spend:122030, purchases:5, value:1048736, roas:8.59, impressions:38583, ctr:1.71, cpp:24406, preview:null},
-    {name:'A3_promo_2x1_carrusel',    camp:'Promo 2x1', spend:115516, purchases:5, value:352058, roas:3.05, impressions:35184, ctr:2.36, cpp:23103, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLStqHkMGMe5dJJUQHaL-l4KbKmGL9ASE5OccRRqgUppNFOhBwVPPKHt0e2GOC3QUFsorWt0W9Xtub9Vu1eIazcwcpDzry1-7RmnwVICqh15b53VUXfk5FchUXSlH6mtJaqpRcN4XrcY3Bi_EWCh-3v42kRFWjtMI9ukAJRlbx8-J-id-1BYe1tkuZQUvMqFrDwTl3fMOyvIWRhgus8L3tN4YY-C23q-Lng9UggM2p6fA&t=AQJAb21kzPTMsBpz1G8'},
-    {name:'A2_promo_express',         camp:'Promo 3x2', spend:106510, purchases:5, value:933486, roas:8.76, impressions:19645, ctr:2.02, cpp:21302, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLI01HBTuJDTXXhTQe_gVs3Dv_b3x3Bil1rr2SbjTAMIAKMtAkkjRpO1bZ4x7HD2iica_N39oeHghpoJBBVd6KPjE8uQeOovainQZ5ZzeCncnDFEDmSw4Qj2eJLM9Dkj_atvwdtg2017OyZAP_CQvJosyEIJsZVrxfZUTNlOmmoMxx08yD3fsSi_cx-Is9grsQcgvvfK3epYJg6IFomimehzL3J0GQ-37RX553x7zR8iQ&t=AQKmX9sypQ4Izr7Hocg'},
-    {name:'A1_promo_2x1_Dinamico_v1', camp:'Promo 2x1', spend:61379, purchases:1, value:89044, roas:1.45, impressions:21881, ctr:1.66, cpp:61379, preview:null},
-    {name:'A3_CABA_Ramos',            camp:'CABA/Ramos + Brand', spend:56353, purchases:1, value:152145, roas:2.70, impressions:171116, ctr:0.19, cpp:56353, preview:null},
-    {name:'A1_CABA_Ramos',            camp:'CABA/Ramos + Brand', spend:49440, purchases:2, value:177244, roas:3.58, impressions:47132, ctr:0.65, cpp:24720, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLSX5Pbo1XF14B3WoLCdhVbq9TeugC8Cy3Cn-ALQpPVWs0I6UsLB6gVf9ZXXf6db_jsv-8hrXvknzPVK-koGG835nvwsBQQM6grlJ6Wd0_V25ZIx3Zmjr2zsltXNXxlssjGeTQGX1EBG7PkylDbUZOQZwetr2g7JqOMxqJcZHtDQoZEs6ZuwrfsXSZdUlvGEhSfroyBsbb7sKYbTme9rWkH7D4E8fpMiR4lI0lgmAy4oA&t=AQIk64MMXQwLfvKDdyI'},
-    {name:'A4_promo_2x1_suelta_catalogo', camp:'Promo 2x1', spend:47235, purchases:3, value:226145, roas:4.79, impressions:9211, ctr:2.78, cpp:15745, preview:null},
-    {name:'A2_CABA_Ramos',            camp:'CABA/Ramos + Brand', spend:26310, purchases:0, value:null, roas:null, impressions:102317, ctr:0.13, cpp:null, preview:null},
-    {name:'A2_promo_2x1_Dinamico_v2', camp:'Promo 2x1', spend:12171, purchases:2, value:195529, roas:16.07, impressions:3500, ctr:2.17, cpp:6086, preview:null},
-    {name:'A3_promo3x2_carrusel',     camp:'Promo 3x2', spend:2165, purchases:0, value:null, roas:null, impressions:467, ctr:0.43, cpp:null, preview:null},
-    {name:'A4_CABA_Ramos_Reel',       camp:'CABA/Ramos + Brand', spend:1014, purchases:0, value:null, roas:null, impressions:2466, ctr:0.20, cpp:null, preview:null},
-  ],
-  '3x2': [
-    {name:'A3_promo3x2_Dinamico_v1', spend:239346, purchases:7, value:887342, roas:3.71, impressions:51360, ctr:1.97, cpp:34192, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQJ47hr5Rs24FpiLu5usoWmmd0H3g-gLIRxxngOaJXw66EI-andDlf2D6YHwnids0p70N2ZyncapgYd11qw_6rb_8d4zis8ObN1DNTgnWhXVFX8UoiUmu6lvsFLaTGGvLA-nuycAooiheVD5TlGuBvCr3ZZqo_rnrhjzY5Nk1PnIvpXeb731A4eGMhG4ITT4_toIJfG19ARrImEs6xhoVkGAVbBfGyD-TtvWEJuxN465Dg&t=AQIwwaL8pb6jNTEOxWI'},
-    {name:'A3_promo3x2_Dinamico_v2', spend:204036, purchases:6, value:1145253, roas:5.61, impressions:43802, ctr:2.11, cpp:34006, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQIyBterJc_h7fozDYbYhgSlsgdNW-8dpBkp18QGGtzhxRr0gWmmDytQnUQTKsPYp4nkKBHN3yx0bk7qahRD82WH9gjFunK7wxZELOj6UCl5U288wh2PsRwb2rUF654SvZA9vVvqr_QJLYKsvynrbqFevod9dYhfSESPh2Alc5Itk1gfIHKe-eRvgMRQQofbXKT4_aBuTagZx_i8jdVqMcGfAvijybPq5e6hgqwLOaqa8Q&t=AQJ9N2qq_WXOayGpFMQ'},
-    {name:'A1_promo_express',         spend:197507, purchases:5, value:656512, roas:3.32, impressions:41781, ctr:1.76, cpp:39501, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQJVTteL2bz5OZkngCwRRDv_crgOR7Uz5bq6OzZ62UMWpdDbr42GWVWIdwGRtmLC50zJ8C8y79Hi4E5gJ3_BYFTqjypaZcTVmS-D_nacGgDeST87BNWW_DXRyjySASNKkPusfQgXCinIFVlJ2EMOUcLyuxK1_wUw61Lql9GAfQEnHxOWGLppTdSv1qfwnrKg5WxLms9xrMcGxT4jYFTX6ZfqA9NhHMohOO79Aa-KWYS5Ow&t=AQJU6526kHsp1NEGu78'},
-    {name:'A4_promo_express',         spend:135299, purchases:5, value:758756, roas:5.61, impressions:26306, ctr:2.03, cpp:27060, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLp_Nwu5wmynyNxwTidSPHMia5mTF_F1-MVlsC6Nu2sZza-F_JcGTKXNHTtFCuhYlmGDVRG2ir3grRApq6XupnHwrd2RcFd6IJR8nC9vlgxINKRIqPpm_8MU4eambnmguqu4CjaRivMZTYU4waVW0KjG0PFOVqUM0WF559n_vqe_PKgo2hjpzU7MwxJx-NU9VKNGTeChyRm-DY2DAE_vBLxOPPpXZ-_KYm2DMR7Ju7Brw&t=AQI3zCaIqoBO_YojNYI'},
-    {name:'A2_promo_express',         spend:106510, purchases:5, value:933486, roas:8.76, impressions:19645, ctr:2.02, cpp:21302, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLI01HBTuJDTXXhTQe_gVs3Dv_b3x3Bil1rr2SbjTAMIAKMtAkkjRpO1bZ4x7HD2iica_N39oeHghpoJBBVd6KPjE8uQeOovainQZ5ZzeCncnDFEDmSw4Qj2eJLM9Dkj_atvwdtg2017OyZAP_CQvJosyEIJsZVrxfZUTNlOmmoMxx08yD3fsSi_cx-Is9grsQcgvvfK3epYJg6IFomimehzL3J0GQ-37RX553x7zR8iQ&t=AQKmX9sypQ4Izr7Hocg'},
-    {name:'A3_promo3x2_carrusel',     spend:2165, purchases:0, value:null, roas:null, impressions:467, ctr:0.43, cpp:null, preview:null},
-  ],
-  '2x1': [
-    {name:'A5_promo_2x1_Reel',        spend:122030, purchases:5, value:1048736, roas:8.59, impressions:38583, ctr:1.71, cpp:24406, preview:null},
-    {name:'A3_promo_2x1_carrusel',    spend:115516, purchases:5, value:352058, roas:3.05, impressions:35184, ctr:2.36, cpp:23103, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLStqHkMGMe5dJJUQHaL-l4KbKmGL9ASE5OccRRqgUppNFOhBwVPPKHt0e2GOC3QUFsorWt0W9Xtub9Vu1eIazcwcpDzry1-7RmnwVICqh15b53VUXfk5FchUXSlH6mtJaqpRcN4XrcY3Bi_EWCh-3v42kRFWjtMI9ukAJRlbx8-J-id-1BYe1tkuZQUvMqFrDwTl3fMOyvIWRhgus8L3tN4YY-C23q-Lng9UggM2p6fA&t=AQJAb21kzPTMsBpz1G8'},
-    {name:'A1_promo_2x1_Dinamico_v1', spend:61379, purchases:1, value:89044, roas:1.45, impressions:21881, ctr:1.66, cpp:61379, preview:null},
-    {name:'A4_promo_2x1_suelta_catalogo', spend:47235, purchases:3, value:226145, roas:4.79, impressions:9211, ctr:2.78, cpp:15745, preview:null},
-    {name:'A2_promo_2x1_Dinamico_v2', spend:12171, purchases:2, value:195529, roas:16.07, impressions:3500, ctr:2.17, cpp:6086, preview:null},
-  ],
-  'ramos': [
-    {name:'A1_CABA_Ramos', spend:42451, purchases:2, value:177244, roas:4.18, impressions:13427, ctr:2.05, cpp:21226, preview:'https://business.facebook.com/ads/api/preview_iframe.php?d=AQLSX5Pbo1XF14B3WoLCdhVbq9TeugC8Cy3Cn-ALQpPVWs0I6UsLB6gVf9ZXXf6db_jsv-8hrXvknzPVK-koGG835nvwsBQQM6grlJ6Wd0_V25ZIx3Zmjr2zsltXNXxlssjGeTQGX1EBG7PkylDbUZOQZwetr2g7JqOMxqJcZHtDQoZEs6ZuwrfsXSZdUlvGEhSfroyBsbb7sKYbTme9rWkH7D4E8fpMiR4lI0lgmAy4oA&t=AQIk64MMXQwLfvKDdyI'},
-    {name:'A3_CABA_Ramos', spend:21857, purchases:1, value:152145, roas:6.96, impressions:6040, ctr:2.86, cpp:21857, preview:null},
-    {name:'A2_CABA_Ramos', spend:5235, purchases:0, value:null, roas:null, impressions:1470, ctr:2.93, cpp:null, preview:null},
-    {name:'A4_CABA_Ramos_Reel', spend:523, purchases:0, value:null, roas:null, impressions:98, ctr:4.08, cpp:null, preview:null},
-  ],
-  'brand': [
-    {name:'A3_CABA_Ramos', spend:34496, purchases:0, value:null, roas:null, impressions:165076, ctr:0.09, cpp:null, preview:null},
-    {name:'A2_CABA_Ramos', spend:21075, purchases:0, value:null, roas:null, impressions:100847, ctr:0.09, cpp:null, preview:null},
-    {name:'A1_CABA_Ramos', spend:6988, purchases:0, value:null, roas:null, impressions:33705, ctr:0.09, cpp:null, preview:null},
-    {name:'A4_CABA_Ramos_Reel', spend:491, purchases:0, value:null, roas:null, impressions:2368, ctr:0.04, cpp:null, preview:null},
-  ],
-};
-
-// Daily data
-const days = ['3 ago','4 ago','5 ago','6 ago','7 ago','8 ago','9 ago'];
-const dailySpend = {
-  '3x2':   [143947, 133500, 137484, 126388, 119059, 96651, 127836],
-  '2x1':   [0,      0,      38725,  48597,  61162,  83502, 126502],
-  'ramos':  [29374,  28135,  13049,  0,      0,      0,     0],
-  'brand':  [0,      0,      10673,  19482,  10747,  9246,  13057],
-};
-const dailyPurchases = {
-  '3x2':  [5,8,2,6,1,4,3],
-  '2x1':  [0,0,4,5,1,3,3],
-  'ramos': [0,3,0,0,0,0,0],
-  'brand': [0,0,0,0,0,0,0],
-};
-const dailyROAS = {
-  '3x2':  [3.76,10.17,2.38,7.39,1.27,6.26,3.64],
-  '2x1':  [null,null,7.17,9.81,1.43,7.57,3.46],
-  'ramos': [null,11.60,null,null,null,null,null],
-  'brand': [null,null,null,null,null,null,null],
-};
-
-// Funnel data
-const funnelStages = [
-  {name:'Impresiones',    val:615685, color:'#e0e7ff'},
-  {name:'Alcance',        val:257641, color:'#c7d2fe'},
-  {name:'Clics en enlace',val:6563,   color:'#a5b4fc'},
-  {name:'Visitas landing',val:5674,   color:'#818cf8'},
-  {name:'Carritos',       val:921,    color:'#6366f1'},
-  {name:'Pagos iniciados',val:136,    color:'#4f46e5'},
-  {name:'Compras',        val:48,     color:'#4338ca'},
-];
-
-// ─── HELPERS ───────────────────────────────────────────────────────────────
-function fmtARS(v){if(v===null||v===undefined)return'—';return'$'+Math.round(v).toLocaleString('es-AR')}
-function fmtNum(v){if(v===null||v===undefined)return'—';return Math.round(v).toLocaleString('es-AR')}
-function fmtROAS(v){if(v===null||v===undefined)return'—';return v.toFixed(2).replace('.',',')+' x'}
-function fmtPct(v){if(v===null||v===undefined)return'—';return v.toFixed(1).replace('.',',')+' %'}
-function roasClass(v){if(v===null)return'na';if(v>=4)return'roas-hi';if(v>=2)return'roas-mid';return'roas-lo'}
-
-// ─── RENDER SCORECARDS ─────────────────────────────────────────────────────
-const sc = document.getElementById('scorecards');
-scorecardData.forEach(s=>{
-  sc.innerHTML+=`<div class="scorecard${s.highlight?' highlight':''}">
-    <div class="label">${s.label}</div>
-    <div class="value${s.accent?' accent':''}">${s.value}</div>
-    <div class="sub">${s.sub}</div>
-  </div>`;
-});
-
-// ─── RENDER CAMPAIGN CARDS ─────────────────────────────────────────────────
-const cc = document.getElementById('campaignCards');
-campaignsData.forEach(c=>{
-  const mRoas = c.roas==='—'?`<span class="m-val muted">—</span>`:`<span class="m-val green">${c.roas}</span>`;
-  const mPurch = c.purchases===null?`<span class="m-val muted">—</span>`:`<span class="m-val">${c.purchases}</span>`;
-  const mCPP = c.costPerPurchase==='—'?`<span class="m-val muted">—</span>`:`<span class="m-val">${c.costPerPurchase} ARS</span>`;
-  cc.innerHTML+=`<div class="camp-card">
-    <div class="camp-name">${c.name}</div>
-    <div class="camp-tech">${c.tech}</div>
-    <span class="camp-status ${c.statusKey}">${c.status}</span>
-    <div class="metrics-row">
-      <div class="m-item"><div class="m-label">Inversión</div><div class="m-val">${c.spend} ARS</div></div>
-      <div class="m-item"><div class="m-label">ROAS</div>${mRoas}</div>
-      <div class="m-item"><div class="m-label">Compras</div>${mPurch}</div>
-      <div class="m-item"><div class="m-label">Costo/Compra</div>${mCPP}</div>
-      <div class="m-item"><div class="m-label">Impresiones</div><div class="m-val">${c.impressions}</div></div>
-      <div class="m-item"><div class="m-label">CTR Enlace</div><div class="m-val">${c.ctr}</div></div>
-    </div>
-  </div>`;
-});
-
-// ─── RENDER ADS TABLE ──────────────────────────────────────────────────────
-function renderAdsTable(){
-  const key=document.getElementById('campFilter').value;
-  const rows=adsByCamp[key]||adsByCamp['all'];
-  const showCamp=key==='all';
-  let html=`<thead><tr>
-    <th>Anuncio</th>${showCamp?'<th>Campaña</th>':''}
-    <th>Preview</th><th>Invertido</th><th>Compras</th>
-    <th>Costo/Compra</th><th>ROAS</th><th>Impresiones</th><th>CTR Enlace</th>
-  </tr></thead><tbody>`;
-  rows.forEach(r=>{
-    const plink=r.preview
-      ?`<a href="${r.preview}" target="_blank">Ver ↗</a>`
-      :`<span style="color:#cbd5e1;font-size:.72rem">No disp.</span>`;
-    const rClass=roasClass(r.roas);
-    html+=`<tr>
-      <td class="mono">${r.name}</td>${showCamp?`<td style="font-size:.72rem;color:#64748b">${r.camp||''}</td>`:''}
-      <td class="preview-cell">${plink}</td>
-      <td class="mono">${fmtARS(r.spend)} ARS</td>
-      <td>${r.purchases!==null?r.purchases:'—'}</td>
-      <td class="mono">${fmtARS(r.cpp)} ${r.cpp?'ARS':''}</td>
-      <td class="${rClass}">${fmtROAS(r.roas)}</td>
-      <td class="mono">${fmtNum(r.impressions)}</td>
-      <td>${fmtPct(r.ctr)}</td>
-    </tr>`;
+function filterTable(){
+  const val=document.getElementById('campFilter').value;
+  document.querySelectorAll('#adsTable tbody tr').forEach(row=>{
+    row.style.display=(val==='all'||row.dataset.camp===val)?'':'none';
   });
-  html+='</tbody>';
-  document.getElementById('adsTable').innerHTML=html;
 }
-renderAdsTable();
 
-// ─── FUNNEL SVG ────────────────────────────────────────────────────────────
-(function buildFunnel(){
-  const svg=document.getElementById('funnelSvg');
-  const cx=230, topHW=200, botHW=30, bandH=65, startY=10;
-  const n=funnelStages.length;
-  const step=(topHW-botHW)/(n-1);
+const labels=['Lun 10','Mar 11','Mié 12','Jue 13','Vie 14','Sáb 15','Dom 16'];
 
-  function hw(i){return topHW-i*step;}
-
-  let svgContent='';
-  // Draw bands (bottom to top for correct overlap)
-  for(let i=0;i<n-1;i++){
-    const tw=hw(i), bw=hw(i+1);
-    const y0=startY+i*bandH, y1=startY+(i+1)*bandH;
-    const lx0=cx-tw, rx0=cx+tw, lx1=cx-bw, rx1=cx+bw;
-    svgContent+=`<path d="M${lx0},${y0} L${rx0},${y0} L${rx1},${y1} L${lx1},${y1} Z" fill="${funnelStages[i].color}" stroke="none"/>`;
-    // top ellipse
-    svgContent+=`<ellipse cx="${cx}" cy="${y0}" rx="${tw}" ry="7" fill="${funnelStages[i].color}" stroke="white" stroke-width="1.5"/>`;
+const datasets={
+  spend:{
+    datasets:[
+      {label:'Promo 3×2',
+       data:[134436,119636,116078,126445,111263,125951,100094],
+       borderColor:'#4f46e5',backgroundColor:'rgba(79,70,229,0.08)',
+       borderWidth:2.5,pointRadius:4,pointHoverRadius:6,tension:0.35,fill:true},
+      {label:'Promo 2×1',
+       data:[138332,103496,119532,93542,67030,99419,103081],
+       borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,0.08)',
+       borderWidth:2.5,pointRadius:4,pointHoverRadius:6,tension:0.35,fill:true},
+      {label:'Brand Awareness',
+       data:[9745,5574,4627,4788,4638,5323,5407],
+       borderColor:'#9ca3af',backgroundColor:'rgba(156,163,175,0.05)',
+       borderWidth:1.5,pointRadius:3,pointHoverRadius:5,tension:0.35,fill:true,
+       borderDash:[4,4]}
+    ]
+  },
+  purchases:{
+    datasets:[
+      {label:'Promo 3×2',
+       data:[6,5,7,3,5,1,0],
+       borderColor:'#4f46e5',backgroundColor:'rgba(79,70,229,0.08)',
+       borderWidth:2.5,pointRadius:4,pointHoverRadius:6,tension:0.35,fill:true},
+      {label:'Promo 2×1',
+       data:[6,5,2,3,3,4,6],
+       borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,0.08)',
+       borderWidth:2.5,pointRadius:4,pointHoverRadius:6,tension:0.35,fill:true},
+      {label:'Brand Awareness',
+       data:[0,0,0,0,0,0,0],
+       borderColor:'#9ca3af',backgroundColor:'rgba(156,163,175,0.05)',
+       borderWidth:1.5,pointRadius:3,tension:0.35,fill:true,borderDash:[4,4]}
+    ]
+  },
+  roas:{
+    datasets:[
+      {label:'Promo 3×2',
+       data:[7.01,4.98,7.85,3.73,7.55,1.82,0.08],
+       borderColor:'#4f46e5',backgroundColor:'rgba(79,70,229,0.08)',
+       borderWidth:2.5,pointRadius:4,pointHoverRadius:6,tension:0.35,fill:true},
+      {label:'Promo 2×1',
+       data:[3.81,6.56,1.14,3.52,6.51,3.71,6.38],
+       borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,0.08)',
+       borderWidth:2.5,pointRadius:4,pointHoverRadius:6,tension:0.35,fill:true},
+      {label:'Brand Awareness',
+       data:[null,null,null,null,null,null,null],
+       borderColor:'#9ca3af',backgroundColor:'rgba(156,163,175,0.05)',
+       borderWidth:1.5,pointRadius:3,tension:0.35,fill:true,borderDash:[4,4]}
+    ]
   }
-  // last ellipse bottom
-  const lastHW=hw(n-1);
-  const lastY=startY+(n-1)*bandH;
-  svgContent+=`<ellipse cx="${cx}" cy="${lastY}" rx="${lastHW}" ry="7" fill="${funnelStages[n-1].color}" stroke="white" stroke-width="1.5"/>`;
+};
 
-  // Labels on the right
-  for(let i=0;i<n;i++){
-    const midY=i<n-1?startY+i*bandH+bandH/2:lastY;
-    const maxLen=String(funnelStages[0].val).length;
-    svgContent+=`<text x="${cx*2-20}" y="${midY+5}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="12" font-weight="600" fill="#1e293b">${funnelStages[i].val.toLocaleString('es-AR')}</text>`;
-  }
-
-  // Conversion arrows between stages
-  for(let i=1;i<n;i++){
-    const y=startY+i*bandH;
-    const pct=(funnelStages[i].val/funnelStages[i-1].val*100).toFixed(1);
-    svgContent+=`<text x="${cx+hw(i)+8}" y="${y+4}" font-family="Poppins,sans-serif" font-size="9" fill="#94a3b8" font-weight="500">${pct.replace('.',',')}%</text>`;
-  }
-
-  svg.innerHTML=svgContent;
-
-  // Legend
-  const leg=document.getElementById('funnelLegend');
-  funnelStages.forEach((s,i)=>{
-    const conv=i>0?` (${(s.val/funnelStages[i-1].val*100).toFixed(1).replace('.',',')}% del paso anterior)`:'';
-    leg.innerHTML+=`<div class="fl-item">
-      <div class="fl-dot" style="background:${s.color}"></div>
-      <div>
-        <div class="fl-label">${s.name}</div>
-        <div class="fl-value">${s.val.toLocaleString('es-AR')}</div>
-        ${i>0?`<div class="fl-conv">${conv}</div>`:''}
-      </div>
-    </div>`;
-  });
-})();
-
-// ─── DAILY CHART ───────────────────────────────────────────────────────────
-const campColors={'3x2':'#4f46e5','2x1':'#7c3aed','ramos':'#0891b2','brand':'#0d9488'};
-const campNames={'3x2':'Promo 3x2','2x1':'Promo 2x1','ramos':'CABA / Ramos','brand':'Brand Awareness'};
+const yLabels={spend:'Inversión (ARS)',purchases:'Compras',roas:'ROAS'};
 let currentMetric='spend';
-let chartInst=null;
 
-function getDatasets(metric){
-  const src=metric==='spend'?dailySpend:metric==='purchases'?dailyPurchases:dailyROAS;
-  return Object.keys(src).map(k=>({
-    label:campNames[k],
-    data:src[k],
-    borderColor:campColors[k],
-    backgroundColor:campColors[k]+'22',
-    borderWidth:2.5,
-    pointRadius:4,
-    pointHoverRadius:6,
-    tension:.35,
-    spanGaps:true,
-    fill:false,
-  }));
-}
-
-function buildChart(){
-  const ctx=document.getElementById('dailyChart').getContext('2d');
-  if(chartInst)chartInst.destroy();
-  const yLabel=currentMetric==='spend'?'Inversión (ARS)':currentMetric==='purchases'?'Compras':'ROAS';
-  chartInst=new Chart(ctx,{
-    type:'line',
-    data:{labels:days,datasets:getDatasets(currentMetric)},
-    options:{
-      responsive:true,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{position:'top',labels:{font:{family:'Poppins',size:11},usePointStyle:true,pointStyleWidth:8}},
-        tooltip:{
-          backgroundColor:'#fff',borderColor:'#e2e8f0',borderWidth:1,
-          titleColor:'#1e293b',bodyColor:'#64748b',
-          callbacks:{
-            label:(ctx)=>{
-              const v=ctx.raw;
-              if(v===null||v===undefined)return null;
-              const n=ctx.dataset.label+': ';
-              if(currentMetric==='spend')return n+'$'+Math.round(v).toLocaleString('es-AR')+' ARS';
-              if(currentMetric==='roas')return n+v.toFixed(2).replace('.',',')+' x';
-              return n+v;
-            }
-          }
-        }
-      },
-      scales:{
-        x:{grid:{color:'#f1f5f9'},ticks:{font:{family:'Poppins',size:10},color:'#94a3b8'}},
-        y:{grid:{color:'#f1f5f9'},ticks:{font:{family:'JetBrains Mono',size:10},color:'#94a3b8',
-          callback:(v)=>{
-            if(currentMetric==='spend')return '$'+Math.round(v/1000)+'k';
+const ctx=document.getElementById('evolutionChart').getContext('2d');
+let chart=new Chart(ctx,{
+  type:'line',
+  data:{labels,datasets:datasets.spend.datasets},
+  options:{
+    responsive:true,
+    maintainAspectRatio:true,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{display:true,labels:{font:{family:'Poppins',size:12},usePointStyle:true,pointStyleWidth:8}},
+      tooltip:{
+        backgroundColor:'white',borderColor:'#e8eaf0',borderWidth:1,
+        titleColor:'#1a1a2e',bodyColor:'#6b7280',
+        titleFont:{family:'Poppins',size:12,weight:'600'},
+        bodyFont:{family:'JetBrains Mono',size:11},padding:12,
+        callbacks:{label:function(ctx){
+          const v=ctx.parsed.y;
+          if(v===null||v===undefined)return ctx.dataset.label+': —';
+          if(currentMetric==='spend')return ctx.dataset.label+': $'+Math.round(v).toLocaleString('es-AR')+' ARS';
+          if(currentMetric==='roas')return ctx.dataset.label+': '+v.toFixed(2)+'x';
+          return ctx.dataset.label+': '+v;
+        }}
+      }
+    },
+    scales:{
+      x:{grid:{color:'#f0f1f5'},ticks:{font:{family:'Poppins',size:11},color:'#9ca3af'}},
+      y:{
+        grid:{color:'#f0f1f5'},
+        ticks:{font:{family:'JetBrains Mono',size:10},color:'#9ca3af',
+          callback:function(v){
+            if(currentMetric==='spend')return'$'+Math.round(v).toLocaleString('es-AR');
             if(currentMetric==='roas')return v.toFixed(1)+'x';
             return v;
           }
-        },beginAtZero:true},
+        },
+        title:{display:true,text:yLabels.spend,font:{family:'Poppins',size:11},color:'#9ca3af'}
       }
     }
-  });
-}
+  }
+});
 
-function switchMetric(m,btn){
-  currentMetric=m;
-  document.querySelectorAll('.metric-btn').forEach(b=>b.classList.remove('active'));
+function switchMetric(metric,btn){
+  if(metric===currentMetric)return;
+  currentMetric=metric;
+  document.querySelectorAll('.metric-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  buildChart();
+  chart.data.datasets=datasets[metric].datasets;
+  chart.options.scales.y.title.text=yLabels[metric];
+  chart.update();
 }
-
-window.addEventListener('load',buildChart);
 </script>
 </body>
 </html>
